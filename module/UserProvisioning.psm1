@@ -3,6 +3,7 @@
 
 Set-StrictMode -Version Latest
 
+#Import user data.
 function Import-UPUserData {
     
     # Makes the function run as a cmdlet.
@@ -36,5 +37,41 @@ function Import-UPUserData {
     }
 }
 
-# Exports the function.
-Export-ModuleMember -Function Import-UPUserData
+
+# Logging function.
+function Write-UPLog {
+    [CmdletBinding()]
+
+    param (
+        # Parameter forcing message input, preventing empty logs.
+        [Parameter(Mandatory)]
+        [string]$Message,
+
+        # The only valid values. Input validation.
+        [ValidateSet("INFO", "WARN", "ERROR")]
+        [string]$Level = "INFO",
+
+        # Creates a directory for logs.
+        [string]$LogPath = "..\logs\provisioning.log"
+    )
+    
+    # Gets the timestamp of the log.
+    $timestamp = Get-Date -Format "dd-MM-yyyy HH:mm:ss"
+
+    # The actual log entry, with timestamp, level of log and message.
+    $entry = "$timestamp [$Level] $Message"
+
+    # Makes sure that the log directory exists.
+    $logDir = Split-Path $LogPath -Parent
+
+    # Function preventing the script from failing if the directory is missing.
+    if (-not (Test-Path $logDir)) {
+        New-Item -ItemType Directory -Path $logDir | Out-Null
+    }
+    
+    #Writes to the log file.
+    Add-Content -Path $LogPath -Value $Entry
+}
+
+# Defines the modules public API.
+Export-ModuleMember -Function Import-UPUserData, Write-UPLog
