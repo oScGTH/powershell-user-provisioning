@@ -169,6 +169,47 @@ function New-UPUser {
     }
 }
 
+function Set-UPUserGroups {
+    [CmdletBinding(SupportsShouldProcess)]
+    param (
+        [Parameter(Mandatory)]
+        [object]$Users,
+
+        [string]$LogPath = "..\logs\provisioning.log"
+    )
+    
+    Import-Module ActiveDirectory -ErrorAction Stop
+
+    $username = $User.PSObject.Properties["Username"].Value
+    $role     = $User.PSObject.Properties["Role"].Value
+
+    # Role -> Group mapping
+    $roleGroupMap = @{
+        "Helpdesk" = @("IT-Helpdesk", "IT-Users")
+        "HR-Advisor" = @("HR-Users")
+    }
+
+    if (-not $roleGroupMap.ContainsKey($role)) {
+        Write-UPLog `
+            -Message "No group mapping defined for role '$role' (user '$username')" `
+            -Level WARN
+            -LogPath $LogPath
+        return
+    }
+
+    foreach ($group in $roleGroupMap[$role]) {
+        if ($PSCmdlet.ShouldProcess($username, "Add to AD group '$group'")) {
+            Write-UPLog `
+                -Message "Adding user '$username' to group '$group'"`
+                -LogPath $LogPath
+            
+            Add-ADGroupMember `
+                -Identity $group `
+                -Members $username
+        }
+    }
+}
+
 # Logging function.
 function Write-UPLog {
     [CmdletBinding()]
@@ -210,4 +251,5 @@ Export-ModuleMember -Function `
     Write-UPLog, `
     Test-UPUserData, `
     Invoke-UPProvisioning, `
-    New-UPUser
+    New-UPUser, `
+    Set-UPUserGroups
