@@ -80,3 +80,27 @@ safe execution, clear error handling, and straightforward rollback in later stag
 AD provisioning is executed on a Windows Server Domain Controller where the
 ActiveDirectory module is available. Development and version control are handled
 on a separate client machine.
+
+## Role-Based Group Assignment
+
+The `Set-UPUserGroups` function assigns Active Directory group memberships
+based on the user's role. This step is executed after the user account has
+been created.
+
+The function maps a single `Role` value to one or more AD groups and adds
+the user to each group individually.
+
+### Key characteristics
+
+- Accepts a single, validated user object.
+- Uses `SupportsShouldProcess` to enable `-WhatIf` and `-Confirm`.
+- Applies group membership on a per-group basis.
+- Logs intent before executing AD changes.
+- Handles unknown roles gracefully by logging a warning and skipping assignment.
+
+### Role mapping strategy
+
+Role-to-group mappings are defined as an internal hashtable in the initial
+version. This keeps the logic explicit and easy to review. The mapping can
+be externalized to JSON in a later iteration without changing the function
+interface.

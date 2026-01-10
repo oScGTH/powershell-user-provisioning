@@ -27,6 +27,6 @@ is logged with severity `ERROR` and re-thrown to ensure upstream functions can h
 2. Validate required user attributes (`Test-UPUserData`)
 3. Simulate provisioning actions (`Invoke-UPProvisioning`)
 4. Create Active Directory users (`New-UPUser`)
-5. Extend with group assignment and rollback logic (future work)
+5. Assign role-based group memberships (`Set-UPUserGroups`)
 
-Import-UPUserData → Test-UPUserData → Invoke-UPProvisioning → New-UPUser
+Import-UPUserData → Test-UPUserData → Invoke-UPProvisioning → New-UPUser → Set-UPUserGroups

@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.5.0
+- Added `Set-UPUserGroups` for role-based Active Directory group assignment.
+- Implemented per-group `SupportsShouldProcess` handling.
+- Introduced role-to-group mapping with safe handling of unknown roles.
+
 ## v0.4.0
 - Added `New-UPUser` for creating Active Directory users.
 - Implemented safe write operations using `SupportsShouldProcess`.
