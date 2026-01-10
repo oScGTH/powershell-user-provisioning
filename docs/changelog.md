@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.4.0
+- Added `New-UPUser` for creating Active Directory users.
+- Implemented safe write operations using `SupportsShouldProcess`.
+- Dynamic OU placement based on user department.
+- Introduced first real AD write operation in the pipeline.
+
 ## v0.3.0
 - Added provisioning stub using `Invoke-UPProvisioning`.
 - Implemented `SupportsShouldProcess` for safe simulation with `-WhatIf`.

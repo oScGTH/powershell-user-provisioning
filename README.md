@@ -1,5 +1,11 @@
 # PowerShell User Provisioning
 
+## Prerequisites
+
+- Windows Server Domain Controller or Windows client with RSAT installed
+- ActiveDirectory PowerShell module
+- Sufficient privileges to create users in Active Directory
+
 ## Importing User Data
 
 User data is imported using the `Import-UPUserData` function, which supports both CSV and JSON input formats.
@@ -16,9 +22,11 @@ All import operations are wrapped in structured error handling. Any failure duri
 is logged with severity `ERROR` and re-thrown to ensure upstream functions can handle rollback or termination.
 
 ## Workflow
+
 1. Import user data from CSV or JSON (`Import-UPUserData`)
 2. Validate required user attributes (`Test-UPUserData`)
 3. Simulate provisioning actions (`Invoke-UPProvisioning`)
-4. Enable real provisioning in later stages
+4. Create Active Directory users (`New-UPUser`)
+5. Extend with group assignment and rollback logic (future work)
 
-Import-UPUserData → Test-UPUserData → Invoke-UPProvisioning
+Import-UPUserData → Test-UPUserData → Invoke-UPProvisioning → New-UPUser

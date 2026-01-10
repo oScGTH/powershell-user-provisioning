@@ -56,3 +56,27 @@ Key characteristics:
 When executed with `-WhatIf`, PowerShell prevents the execution of provisioning
 logic and outputs a simulation message to the console. No log entries are written
 in this mode by design.
+
+## Active Directory User Provisioning
+
+The `New-UPUser` function is responsible for creating individual user accounts
+in Active Directory. This is the first stage where write operations are performed
+against AD.
+
+The function is intentionally designed to handle **one user at a time** to ensure
+safe execution, clear error handling, and straightforward rollback in later stages.
+
+### Key characteristics
+
+- Accepts a single, validated user object.
+- Uses `SupportsShouldProcess` to enable `-WhatIf` and `-Confirm`.
+- Dynamically determines the target OU based on user attributes.
+- Logs provisioning intent before executing AD operations.
+- Requires execution on a system with the ActiveDirectory PowerShell module
+  (Domain Controller or RSAT-enabled host).
+
+### Execution context
+
+AD provisioning is executed on a Windows Server Domain Controller where the
+ActiveDirectory module is available. Development and version control are handled
+on a separate client machine.
