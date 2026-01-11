@@ -104,3 +104,36 @@ Role-to-group mappings are defined as an internal hashtable in the initial
 version. This keeps the logic explicit and easy to review. The mapping can
 be externalized to JSON in a later iteration without changing the function
 interface.
+
+## Bulk Provisioning Orchestration
+
+The `Invoke-UPBulkProvisioning` function orchestrates the full provisioning
+workflow for multiple users. It coordinates existing provisioning steps
+without introducing new Active Directory logic.
+
+Each user is treated as an independent transaction to ensure that failures
+affect only the current user and do not halt the entire execution.
+
+### Responsibilities
+
+- Iterates over validated user objects.
+- Creates user accounts using `New-UPUser`.
+- Assigns role-based group memberships using `Set-UPUserGroups`.
+- Tracks completed actions per user to support future rollback.
+- Returns structured result objects for reporting and auditing.
+
+### Transaction model
+
+Each user is processed independently. For every user, the function records:
+- Username
+- Completed actions
+- Final status (Success / Failed)
+
+This design enables partial success in bulk operations and provides the
+necessary information to safely implement rollback logic in later stages.
+
+### Simulation support
+
+The function uses `SupportsShouldProcess`, allowing full simulation of the
+bulk provisioning process using `-WhatIf`. When run in simulation mode, no
+Active Directory changes or log writes are performed.

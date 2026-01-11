@@ -266,8 +266,6 @@ function Invoke-UPBulkProvisioning {
     return $results
 }
 
-
-
 # Logging function.
 function Write-UPLog {
     [CmdletBinding()]

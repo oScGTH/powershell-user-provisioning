@@ -28,5 +28,6 @@ is logged with severity `ERROR` and re-thrown to ensure upstream functions can h
 3. Simulate provisioning actions (`Invoke-UPProvisioning`)
 4. Create Active Directory users (`New-UPUser`)
 5. Assign role-based group memberships (`Set-UPUserGroups`)
+6. Orchestrate bulk provisioning (`Invoke-UPBulkProvisioning`)
 
-Import-UPUserData → Test-UPUserData → Invoke-UPProvisioning → New-UPUser → Set-UPUserGroups
+Import-UPUserData → Test-UPUserData → Invoke-UPProvisioning → New-UPUser → Set-UPUserGroups → Invoke-UPBulkProvisioning

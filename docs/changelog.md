@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.0
+- Added `Invoke-UPBulkProvisioning` to orchestrate user provisioning in bulk.
+- Implemented per-user transaction handling with structured result output.
+- Prepared rollback support by tracking completed actions per user.
+- Enabled full simulation of bulk provisioning using `-WhatIf`.
+
 ## v0.5.0
 - Added `Set-UPUserGroups` for role-based Active Directory group assignment.
 - Implemented per-group `SupportsShouldProcess` handling.
