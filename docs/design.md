@@ -137,3 +137,34 @@ necessary information to safely implement rollback logic in later stages.
 The function uses `SupportsShouldProcess`, allowing full simulation of the
 bulk provisioning process using `-WhatIf`. When run in simulation mode, no
 Active Directory changes or log writes are performed.
+
+## Rollback and Recovery
+
+The `Undo-UPUserProvisioning` function provides a controlled rollback mechanism
+for user provisioning operations. Rollback is based on the actual actions
+performed during provisioning, not on assumptions.
+
+The function operates on a single provisioning result object and reverses
+only the steps that were successfully completed.
+
+### Rollback principles
+
+- Rollback is explicit and manually triggered.
+- Only completed actions are reversed.
+- Operations are executed in a safe dependency order.
+- Full simulation is supported using `-WhatIf`.
+
+### Rollback order
+
+1. Group memberships are removed.
+2. The user account is deleted if it was created.
+
+This order ensures that dependent resources are cleaned up safely without
+causing secondary failures.
+
+### Safety guarantees
+
+- No rollback is attempted if no actions were completed.
+- Built-in groups such as `Domain Users` are excluded from removal.
+- Rollback operations require the ActiveDirectory PowerShell module and
+  appropriate privileges.

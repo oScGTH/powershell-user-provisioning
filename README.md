@@ -29,5 +29,6 @@ is logged with severity `ERROR` and re-thrown to ensure upstream functions can h
 4. Create Active Directory users (`New-UPUser`)
 5. Assign role-based group memberships (`Set-UPUserGroups`)
 6. Orchestrate bulk provisioning (`Invoke-UPBulkProvisioning`)
+7. Roll back provisioning actions (`Undo-UPUserProvisioning`)
 
-Import-UPUserData → Test-UPUserData → Invoke-UPProvisioning → New-UPUser → Set-UPUserGroups → Invoke-UPBulkProvisioning
+Import → Validate → Simulate → Create User → Assign Groups → Bulk Orchestration → Rollback

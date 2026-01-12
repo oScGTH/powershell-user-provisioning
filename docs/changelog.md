@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.7.0
+- Added `Undo-UPUserProvisioning` for controlled rollback of provisioning actions.
+- Implemented action-based rollback using provisioning result objects.
+- Ensured safe rollback order and full `-WhatIf` simulation support.
+
 ## v0.6.0
 - Added `Invoke-UPBulkProvisioning` to orchestrate user provisioning in bulk.
 - Implemented per-user transaction handling with structured result output.
