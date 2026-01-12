@@ -266,6 +266,67 @@ function Invoke-UPBulkProvisioning {
     return $results
 }
 
+function Undo-UPUserProvisioning {
+    [CmdletBinding(SupportsShouldProcess)]
+    param (
+        [Parameter(Mandatory)]
+        [object]$Result,
+
+        [string]$LogPath = "..\logs\provisioning.log"
+    )
+
+    Import-Module ActiveDirectory -ErrorAction Stop
+
+    $username = $Result.PSObject.Properties["Username"].value
+    $actions  = $Result.PSObject.Properties["ActionsCompleted"].Value
+
+    if (-not $actions -or $actions.Count -eq 0) {
+        Write-UPLog `
+            -Message "No actions to rollback for user '$username'" `
+            -Level WARN `
+            -LogPath $LogPath
+        return
+    }
+    
+    Write-UPLog `
+        -Message "Starting rollback for user '$username'" `
+        -LogPath $LogPath
+
+    if ($actions -contains "GroupsAssigned") {
+        $groups = Get-ADPrincipalGroupMembership $username | 
+        Where-Object {$_.Name -ne "Domain Users"}
+
+        foreach ($group in $groups) {
+            if ($PSCmdlet.ShouldProcess($username, "Remove from AD group '$($group.Name)'")) {
+                Write-UPLog `
+                    -Message "Removing user '$username' from group '$($group.Name)'" `
+                    -LogPath $LogPath
+                
+                Remove-ADGroupMember `
+                    -Identity $group.Name `
+                    -Members $username `
+                    -Confirm:$false
+            }
+        }
+    }
+
+    if ($actions -contains "UserCreated") {
+        if ($PSCmdlet.ShouldProcess($username, "Remove AD user")) {
+            Write-UPLog `
+                -Message "Removing AD user '$username'" `
+                -LogPath $LogPath
+            
+            Remove-ADUser `
+                -Identity $username `
+                -Confirm:$false
+        }
+    }
+
+    Write-UPLog `
+        -Message "Rolleback completed for user '$username'" `
+        -LogPath $LogPath
+}
+
 # Logging function.
 function Write-UPLog {
     [CmdletBinding()]
@@ -309,4 +370,5 @@ Export-ModuleMember -Function `
     Invoke-UPProvisioning, `
     New-UPUser, `
     Set-UPUserGroups, `
-    Invoke-UPBulkProvisioning
+    Invoke-UPBulkProvisioning, `
+    Undo-UPUserProvisioning
