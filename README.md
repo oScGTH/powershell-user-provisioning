@@ -1,4 +1,4 @@
-# PowerShell User Provisioning
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=25&duration=2000&pause=2000&vCenter=true&repeat=false&width=435&lines=POWERSHELL+USER+PRIVISIONING)](https://git.io/typing-svg)
 
 ## Prerequisites
 
